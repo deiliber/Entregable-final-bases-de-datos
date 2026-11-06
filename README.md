@@ -1,298 +1,122 @@
 # Entregable-final-bases-de-datos
-PROYECTO: AVISTAMIENTO DE ANIMALES
+# 🐾 PROYECTO: AVISTAMIENTO DE ANIMALES
 
-1. Descripción técnica de la base de datos
+## 📋 Descripción Técnica de la Base de Datos
+La base de datos **AvistamientoDeAnimales** tiene como objetivo almacenar, organizar y consultar información detallada sobre diferentes especies de animales, sus tipos, alimentación, hábitats, características físicas y estados de conservación.
 
-La base de datos AvistamientoDeAnimales tiene como objetivo almacenar, organizar y consultar información sobre diferentes especies de animales, sus tipos, alimentación, hábitats, características y estados de conservación.
+> 🛠️ **Información Técnica Clave:**
+> * **Motor de Base de Datos:** Microsoft SQL Server
+> * **Nombre de la Base de Datos:** `AvistamientoDeAnimales`
+> * **Lenguaje Utilizado:** SQL
+> * **Cantidad de Tablas:** 8
+> * **Procedimientos Almacenados:** 2
 
-Información técnica:
+La base de datos está estructurada de forma relacional mediante llaves primarias (`PRIMARY KEY`) y llaves foráneas (`FOREIGN KEY`). Adicionalmente, incluye registros de prueba, consultas de extracción de datos y procedimientos almacenados funcionales.
 
-Motor de base de datos: Microsoft SQL Server.
+---
 
-Nombre de la base de datos: AvistamientoDeAnimales.
+## 📖 Diccionario de Datos
 
-Cantidad de tablas: 8.
+A continuación se detalla la estructura, campos y tipos de datos de las ocho (8) tablas del sistema.
 
-Lenguaje utilizado: SQL.
+### 2.1. Tabla `tipoanimal`
+*Almacena las clasificaciones o tipos generales de animales.*
 
-Procedimientos almacenados: 2.
+| Campo | Tipo de Dato | Descripción |
+| :--- | :--- | :--- |
+| **id_tipo** 🔑 | `INT` | Identificador único del tipo de animal (Primary Key). |
+| nombre | `VARCHAR(30)` | Nombre de la categoría o tipo de animal. |
 
-La base de datos está organizada mediante tablas relacionadas entre sí por medio de llaves primarias (PRIMARY KEY) y llaves foráneas (FOREIGN KEY).
+### 2.2. Tabla `alimentacion`
+*Almacena los diferentes regímenes alimenticios.*
 
-También cuenta con registros de ejemplo, consultas para obtener información y procedimientos almacenados para insertar especies y consultar el total de especies registradas.
+| Campo | Tipo de Dato | Descripción |
+| :--- | :--- | :--- |
+| **id_alimentacion** 🔑 | `INT` | Identificador único del tipo de alimentación (Primary Key). |
+| nombre | `VARCHAR(30)` | Nombre del tipo de alimentación (ej. Herbívoro, Carnívoro). |
 
-2. Diccionario de datos básico
+### 2.3. Tabla `Habitad`
+*Almacena los diferentes entornos o hábitats naturales.*
 
-A continuación, se describen las ocho tablas que componen la base de datos y la función de cada una.
+| Campo | Tipo de Dato | Descripción |
+| :--- | :--- | :--- |
+| **id_habitad** 🔑 | `INT` | Identificador único del hábitat (Primary Key). |
+| nombre | `VARCHAR(30)` | Nombre del ecosistema o hábitat. |
 
-2.1. Tabla tipoanimal
+### 2.4. Tabla `Caracteristicas`
+*Almacena rasgos físicos y comportamientos particulares.*
 
-Almacena los diferentes tipos de animales.
+| Campo | Tipo de Dato | Descripción |
+| :--- | :--- | :--- |
+| **id_caracteristica** 🔑 | `INT` | Identificador único de la característica (Primary Key). |
+| descripcion | `VARCHAR(200)` | Detalle de la característica física o conductual. |
 
-Campo
+### 2.5. Tabla `EstadoConservacion`
+*Registra las categorías de amenaza o estado de conservación mundial.*
 
-Tipo de dato
+| Campo | Tipo de Dato | Descripción |
+| :--- | :--- | :--- |
+| **id_estado** 🔑 | `INT` | Identificador único del estado de conservación (Primary Key). |
+| nombre | `VARCHAR(50)` | Nombre oficial del estado (ej. En peligro crítico, Preocupación menor). |
 
-Descripción
+### 2.6. Tabla `Especie`
+*Tabla principal que consolida el registro central de los animales.*
 
-id_tipo
+| Campo | Tipo de Dato | Descripción |
+| :--- | :--- | :--- |
+| **id_especie** 🔑 | `INT` | Identificador único de la especie (Primary Key). |
+| nombre | `VARCHAR(50)` | Nombre común o científico de la especie. |
+| id_tipo 🔗 | `INT` | Relación con el tipo de animal (Foreign Key). |
+| id_alimentacion 🔗 | `INT` | Relación con el tipo de alimentación (Foreign Key). |
+| id_estado 🔗 | `INT` | Relación con su estado de conservación (Foreign Key). |
+| fecha_registro | `DATE` | Fecha en la que se ingresó la especie al sistema. |
+| observaciones | `VARCHAR(70)` | Notas adicionales sobre el animal. |
 
-INT
+### 2.7. Tabla `EspecieHabitat`
+*Tabla intermedia que gestiona la relación de muchos a muchos entre Especies y Hábitats.*
 
-Identificador del tipo de animal.
+| Campo | Tipo de Dato | Descripción |
+| :--- | :--- | :--- |
+| **id_especie** 🔑🔗 | `INT` | Identificador de la especie (Parte de la PK compuesta / FK). |
+| **id_habitad** 🔑🔗 | `INT` | Identificador del hábitat (Parte de la PK compuesta / FK). |
 
-nombre
+### 2.8. Tabla `EspecieCaracteristica`
+*Tabla intermedia que gestiona la relación de muchos a muchos entre Especies y Características.*
 
-VARCHAR(30)
+| Campo | Tipo de Dato | Descripción |
+| :--- | :--- | :--- |
+| **id_especie** 🔑🔗 | `INT` | Identificador de la especie (Parte de la PK compuesta / FK). |
+| **id_caracteristica** 🔑🔗 | `INT` | Identificador de la característica (Parte de la PK compuesta / FK). |
 
-Nombre del tipo de animal.
+---
 
-2.2. Tabla alimentacion
+## 🔗 Explicación de las Relaciones
 
-Almacena los diferentes tipos de alimentación de los animales.
+El ecosistema de datos mantiene su integridad gracias a los siguientes vínculos:
 
-Campo
+* **`tipoanimal` ➡️ `Especie`**: Relación de uno a muchos mediante el campo `id_tipo`. Un tipo de animal abarca múltiples especies.
+* **`alimentacion` ➡️ `Especie`**: Relación de uno a muchos mapeada mediante `id_alimentacion`.
+* **`EstadoConservacion` ➡️ `Especie`**: Relación de uno a muchos asociada a través de `id_estado`.
+* **`Especie` 🔄 `Habitad`**: Relación de muchos a muchos resuelta mediante la tabla pivote `EspecieHabitat`.
+* **`Especie` 🔄 `Caracteristicas`**: Relación de muchos a muchos resuelta mediante la tabla pivote `EspecieCaracteristica`.
 
-Tipo de dato
+*Nota: Las tablas relacionales compuestas utilizan claves primarias duplicadas/compuestas para blindar la unicidad de los registros.*
 
-Descripción
+---
 
-id_alimentacion
+## ⚙️ Procedimientos Almacenados (Stored Procedures)
 
-INT
+Para optimizar y encapsular las consultas frecuentes dentro del servidor de SQL Server, se desarrollaron:
 
-Identificador de alimentación.
+1. 📥 **`usp_InsertarEspecie`**: Automatiza la inserción segura de nuevas especies en la base de datos solicitando parámetros obligatorios como nombre, tipo, alimentación y estado.
+2. 📊 **`usp_TotalEspecies`**: Consulta dinámica que computa y retorna en tiempo real la cantidad total de especies registradas en la tabla principal.
 
-nombre
+---
 
-VARCHAR(30)
+## 🔄 Integración Modular (Nivel 1)
 
-Nombre de la alimentación.
+Actualmente, el proyecto se encuentra en **Nivel 1**, lo que significa que los submódulos están alineados conceptualmente pero trabajarán su conexión técnica en fases posteriores:
 
-2.3. Tabla Habitad
-
-Almacena los diferentes hábitats donde pueden vivir las especies.
-
-Campo
-
-Tipo de dato
-
-Descripción
-
-id_habitad
-
-INT
-
-Identificador del hábitat.
-
-nombre
-
-VARCHAR(30)
-
-Nombre del hábitat.
-
-2.4. Tabla Caracteristicas
-
-Almacena las características físicas y comportamentales de los animales.
-
-Campo
-
-Tipo de dato
-
-Descripción
-
-id_caracteristica
-
-INT
-
-Identificador de la característica.
-
-descripcion
-
-VARCHAR(200)
-
-Descripción de la característica.
-
-2.5. Tabla EstadoConservacion
-
-Almacena los diferentes estados de conservación de las especies.
-
-Campo
-
-Tipo de dato
-
-Descripción
-
-id_estado
-
-INT
-
-Identificador del estado.
-
-nombre
-
-VARCHAR(50)
-
-Nombre del estado de conservación.
-
-2.6. Tabla Especie
-
-Es la tabla principal de la base de datos. Almacena la información de las especies registradas.
-
-Campo
-
-Tipo de dato
-
-Descripción
-
-id_especie
-
-INT
-
-Identificador de la especie.
-
-nombre
-
-VARCHAR(50)
-
-Nombre de la especie.
-
-id_tipo
-
-INT
-
-Identificador del tipo de animal.
-
-id_alimentacion
-
-INT
-
-Identificador de alimentación.
-
-id_estado
-
-INT
-
-Identificador del estado de conservación.
-
-fecha_registro
-
-DATE
-
-Fecha de registro de la especie.
-
-observaciones
-
-VARCHAR(70)
-
-Información adicional de la especie.
-
-2.7. Tabla EspecieHabitat
-
-Permite relacionar las especies con sus diferentes hábitats.
-
-Campo
-
-Tipo de dato
-
-Descripción
-
-id_especie
-
-INT
-
-Identificador de la especie.
-
-id_habitad
-
-INT
-
-Identificador del hábitat.
-
-2.8. Tabla EspecieCaracteristica
-
-Permite relacionar las especies con sus características.
-
-Campo
-
-Tipo de dato
-
-Descripción
-
-id_especie
-
-INT
-
-Identificador de la especie.
-
-id_caracteristica
-
-INT
-
-Identificador de la característica.
-
-3. Explicación de las relaciones
-
-La base de datos utiliza relaciones para conectar la información de las diferentes tablas.
-
-tipoanimal - Especie: un tipo de animal puede tener varias especies registradas. La relación se realiza mediante el campo id_tipo.
-
-alimentacion - Especie: una alimentación puede estar asociada con diferentes especies mediante id_alimentacion.
-
-EstadoConservacion - Especie: un estado de conservación puede estar relacionado con diferentes especies mediante id_estado.
-
-Especie - Habitad: estas tablas se relacionan mediante EspecieHabitat, permitiendo asociar diferentes especies con diferentes hábitats.
-
-Especie - Caracteristicas: estas tablas se relacionan mediante EspecieCaracteristica, permitiendo asociar diferentes características a las especies.
-
-Las relaciones se establecen mediante llaves primarias y foráneas. Las tablas EspecieHabitat y EspecieCaracteristica utilizan llaves primarias compuestas para identificar las relaciones entre sus registros.
-
-4. Integración con los otros submódulos
-
-El proyecto AvistamientoDeAnimales está compuesto por diferentes submódulos que trabajan con un mismo objetivo: desarrollar una aplicación relacionada con el registro y consulta de información sobre especies animales.
-
-Como el proyecto se encuentra en el Nivel 1, los submódulos están relacionados conceptualmente, pero todavía no están conectados técnicamente.
-
-Relación con el submódulo de clases
-
-Las clases representan los elementos principales del proyecto. Por ejemplo, una clase Especie puede representar la información almacenada en la tabla Especie, utilizando atributos como nombre, tipo de animal, alimentación y estado de conservación.
-
-De esta manera, las clases y las tablas comparten información y representan los mismos elementos del sistema, aunque todavía no existe una conexión directa entre ellas.
-
-Relación con el submódulo de Frontend
-
-El frontend representa la parte visual de la aplicación, donde los usuarios pueden consultar y visualizar la información de las especies.
-
-Las vistas pueden mostrar información como el nombre del animal, su alimentación, hábitat, características y estado de conservación.
-
-La información que se muestra en estas vistas corresponde a los datos que se encuentran organizados en la base de datos.
-
-Relación general entre los submódulos
-
-Los tres submódulos cumplen funciones diferentes, pero se complementan entre sí:
-
-Base de datos: almacena y organiza la información de las especies.
-
-Clases: representan los elementos y la información que utiliza el sistema.
-
-Frontend: permite que los usuarios interactúen con la aplicación y visualicen la información.
-
-Aunque actualmente no existe una conexión técnica entre los submódulos, sus estructuras están relacionadas y pueden integrarse posteriormente para formar una aplicación completa.
-
-5. Procedimientos almacenados
-
-La base de datos cuenta con dos procedimientos almacenados:
-
-usp_InsertarEspecie: permite registrar una nueva especie mediante parámetros de entrada como el nombre, el tipo de animal, la alimentación y el estado de conservación.
-
-usp_TotalEspecies: permite consultar la cantidad total de especies registradas en la tabla Especie.
-
-Estos procedimientos facilitan la ejecución de operaciones dentro de la base de datos.
-
-Nombre del proyecto: AvistamientoDeAnimales.
-
-Motor: Microsoft SQL Server.
-
-Total de tablas: 8.
-
-Total de procedimientos almacenados: 2.
+* **Submódulo de Clases (Backend):** Modela la lógica del negocio. La clase `Especie` replica los atributos exactos definidos en la tabla `Especie` (`nombre`, `id_tipo`, etc.).
+* **Submódulo Frontend (Interfaz Visual):** Diseña las vistas donde el usuario interactuará con las tarjetas, filtros de búsqueda y listados basados en la estructura analizada de la base de datos.
+* **Base de Datos:** Centraliza el almacenamiento permanente de la información que fluye entre las clases y la interfaz de usuario.
